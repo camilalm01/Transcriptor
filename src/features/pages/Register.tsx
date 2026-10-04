@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import AuthFormLayout from '../components/layout/AuthFormLayout';
-import { FormField } from '../components/ui/FormField';
-import { PasswordField } from '../components/ui/PasswordField';
-import { register } from '../shared/services/auth';
-import { isHttpError } from '../shared/services/http';
-import { registerSchema, zodToFieldErrors, type RegisterInput } from '../validation/authSchemas';
-import { PASSWORD_REQUIREMENTS } from '../validation/passwordRules';
-import { setCurrentUser, setSolicitanteId } from '../shared/services/authLocal';
-import { useAuthForm } from '../shared/hooks/useAuthForm';
+import AuthFormLayout from '../../shared/components/layout/AuthFormLayout';
+import { FormField } from '../../shared/components/ui/FormField';
+import { PasswordField } from '../../shared/components/ui/PasswordField';
+import { register } from '../../services/auth';
+import { isHttpError } from '../../services/http';
+import { registerSchema, zodToFieldErrors, type RegisterInput } from '../../validation/authSchemas';
+import { PASSWORD_REQUIREMENTS } from '../../validation/passwordRules';
+import { setCurrentUser, setSolicitanteId } from '../../services/authLocal';
+import { useAuthForm } from '../../shared/hooks/useAuthForm';
 
 export default function Register() {
   useEffect(() => { document.title = 'Registro | Mi App Accesible'; }, []);

@@ -1,12 +1,12 @@
 import React from 'react';
-import accessibilityIcon from '../../assets/icons/accessibility.svg';
+import accessibilityIcon from '../../icons/accessibility.svg';
 import {
   applyA11yPreferences,
   loadA11yPreferences,
   saveA11yPreferences,
   type A11yPreferences,
   type Theme
-} from '../../shared/services/a11yPreferences';
+} from '../../../services/a11yPreferences';
 
 function speak(message: string) {
   if (typeof window === 'undefined' || !('speechSynthesis' in window)) return;

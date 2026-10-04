@@ -3,19 +3,19 @@ import { Routes, Route } from 'react-router-dom';
 import AppShell from './app/AppShell';
 import RoutesWithAnnouncements from './app/RoutesWithAnnouncements';
 
-import Welcome from './pages/Welcome.tsx';
-import Home from './pages/Home';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import SpeakerDashboard from './pages/SpeakerDashboard';
-import NewSession from './pages/NewSession';
-import RecordingsDashboard from './pages/RecordingsDashboard';
-import LessonDashboard from './pages/LessonDashboard';
-import NewRecording from './pages/NewRecording';
-import RecordingLobby from './pages/RecordingLobby';
-import RecordingLive from './pages/RecordingLive.tsx';
-import RecordingPaused from './pages/RecordingPaused';
-import RecordingSave from './pages/RecordingSave';
+import Welcome from './features/pages/Welcome';
+import Home from './features/pages/Home';
+import Login from './features/pages/Login';
+import Register from './features/pages/Register';
+import SpeakerDashboard from './features/pages/SpeakerDashboard';
+import NewSession from './features/pages/NewSession';
+import RecordingsDashboard from './features/pages/RecordingsDashboard';
+import LessonDashboard from './features/pages/LessonDashboard';
+import NewRecording from './features/pages/NewRecording';
+import RecordingLobby from './features/pages/RecordingLobby';
+import RecordingLive from './features/pages/RecordingLive';
+import RecordingPaused from './features/pages/RecordingPaused';
+import RecordingSave from './features/pages/RecordingSave';
 
 function Placeholder({ title }: { title: string }) {
   return (

@@ -1,4 +1,4 @@
-import AccessibilityButton from '../components/ui/AccessibilityButton';
+import AccessibilityButton from '../shared/components/ui/AccessibilityButton';
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
   return (

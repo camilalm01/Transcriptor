@@ -1,5 +1,5 @@
 import { http } from './http';
-import type { LoginInput, RegisterInput } from '../../validation/authSchemas';
+import type { LoginInput, RegisterInput } from '../validation/authSchemas';
 import type { AuthUser, LoginResponse, RegisterResponse } from './auth';
 
 type BackendUsuario = {
