@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRecordingById, toggleComplementaryResource } from '../shared/services/recordings';
+import { getRecordingById, toggleComplementaryResource } from '../../services/recordings';
 
 export default function LessonDashboard() {
   const navigate = useNavigate();
@@ -15,17 +15,21 @@ export default function LessonDashboard() {
     document.title = 'Dashboard Lección | Mi App Accesible';
   }, []);
 
-  useEffect(() => {
-    if (!playing) return;
-    const timer = window.setInterval(() => {
-      setProgress((current) => (current >= 100 ? 100 : current + 2));
-    }, 220);
-    return () => window.clearInterval(timer);
-  }, [playing]);
+ useEffect(() => {
+    if (!playing || progress >= 100) return;
 
-  useEffect(() => {
-    if (progress >= 100) setPlaying(false);
-  }, [progress]);
+    const timer = window.setTimeout(() => {
+      const nextProgress = Math.min(100, progress + 2);
+
+      setProgress(nextProgress);
+
+      if (nextProgress >= 100) {
+        setPlaying(false);
+      }
+    }, 220);
+
+    return () => window.clearTimeout(timer);
+  }, [playing, progress]);
 
   if (!recording) {
     return (

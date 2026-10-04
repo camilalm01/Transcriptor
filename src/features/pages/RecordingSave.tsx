@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FormField } from '../components/ui/FormField';
-import { saveRecordingSession } from '../shared/services/recordings';
-import { getRecordingFlowState, resetRecordingFlowState, updateRecordingFlowState } from '../shared/services/recordingFlow';
+import { FormField } from '../../shared/components/ui/FormField';
+import { saveRecordingSession } from '../../services/recordings';
+import { getRecordingFlowState, resetRecordingFlowState } from '../../services/recordingFlow';
 
 export default function RecordingSave() {
   const navigate = useNavigate();
