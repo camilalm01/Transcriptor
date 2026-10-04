@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import AuthFormLayout from '../components/layout/AuthFormLayout';
 import { FormField } from '../components/ui/FormField';
 import { PasswordField } from '../components/ui/PasswordField';
-import { login } from '../services/auth';
-import { isHttpError } from '../services/http';
+import { login } from '../shared/services/auth';
+import { isHttpError } from '../shared/services/http';
 import { z } from 'zod';
 import { loginSchema, zodToFieldErrors, type LoginInput } from '../validation/authSchemas';
-import { setCurrentUser, setSolicitanteId } from '../services/authLocal';
-import { useAuthForm } from '../hooks/useAuthForm';
+import { setCurrentUser, setSolicitanteId } from '../shared/services/authLocal';
+import { useAuthForm } from '../shared/hooks/useAuthForm';
 
 export default function Login() {
   useEffect(() => { document.title = 'Login | Mi App Accesible'; }, []);

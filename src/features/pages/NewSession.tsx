@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormField } from '../components/ui/FormField';
-import { addSpeakerSession } from '../services/speakerSessions';
+import { addSpeakerSession } from '../shared/services/speakerSessions';
 
 export default function NewSession() {
   const navigate = useNavigate();

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRecordingFlowState, secondsToDuration, updateRecordingFlowState } from '../services/recordingFlow';
+import { getRecordingFlowState, secondsToDuration, updateRecordingFlowState } from '../shared/services/recordingFlow';
 
 export default function RecordingPaused() {
   const navigate = useNavigate();

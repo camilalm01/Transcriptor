@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getRecordingById, toggleComplementaryResource } from '../services/recordings';
+import { getRecordingById, toggleComplementaryResource } from '../shared/services/recordings';
 
 export default function LessonDashboard() {
   const navigate = useNavigate();

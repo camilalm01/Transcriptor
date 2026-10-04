@@ -9,7 +9,7 @@ import {
   setLastSelectedSpeakerDate,
   toDateKey,
   type SpeakerSession
-} from '../services/speakerSessions';
+} from '../shared/services/speakerSessions';
 
 function shortMonth(date: Date) {
   return date.toLocaleDateString('es-ES', { month: 'short' }).replace('.', '');

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getRecordingFlowState, updateRecordingFlowState } from '../services/recordingFlow';
+import { getRecordingFlowState, updateRecordingFlowState } from '../shared/services/recordingFlow';
 
 export default function RecordingLobby() {
   const navigate = useNavigate();

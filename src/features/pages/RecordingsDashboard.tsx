@@ -8,7 +8,7 @@ import {
   toggleVisibility,
   type RecordingItem,
   type RecordingStatus
-} from '../services/recordings';
+} from '../shared/services/recordings';
 
 const TABS: Array<{ id: RecordingStatus | 'all'; label: string }> = [
   { id: 'published', label: 'Publicado' },

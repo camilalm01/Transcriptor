@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import LiveAnnouncer from './a11y/LiveAnnouncer';
-import { useAnnouncer } from '../hooks/useAnnouncer';
+import { useAnnouncer } from '../shared/hooks/useAnnouncer';
 
 /**
  * Envuelve <Routes>:

@@ -1,4 +1,4 @@
-import type { LoginInput, RegisterInput } from '../validation/authSchemas';
+import type { LoginInput, RegisterInput } from '../../validation/authSchemas';
 import { createAuthProvider } from './authProviders';
 
 export type AuthUser = { id: string; name: string; email: string };
