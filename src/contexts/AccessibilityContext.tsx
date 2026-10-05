@@ -1,30 +1,12 @@
 import {
-  createContext,
-  useContext,
   useEffect,
   useState,
 } from "react";
 
 import type { ReactNode } from "react";
 
-import type {
-  AccessibilitySettings,
-  NavigationMode,
-} from "../shared/types/accessibility";
-
-interface AccessibilityContextType {
-  settings: AccessibilitySettings;
-
-  setNavigationMode: ( mode: NavigationMode) => void;
-
-  toggleVisionSupport: () => void;
-
-  setScale: ( scale: number) => void;
-
-  setTheme: ( theme: "light" | "dark" | "high-contrast") => void;
-}
-
-const AccessibilityContext = createContext<AccessibilityContextType | undefined>(undefined);
+import type { AccessibilitySettings, NavigationMode } from "../shared/types/accessibility";
+import { AccessibilityContext } from "./accessibilityContextValue";
 
 interface Props {
   children: ReactNode;
@@ -41,15 +23,28 @@ export function AccessibilityProvider({
   children,
 }: Props) {
   const [settings, setSettings] =
-    useState<AccessibilitySettings>(DEFAULT_SETTINGS);
-
-  useEffect(() => {
-    const saved = localStorage.getItem("accessibility-settings");
-
-    if (saved) {
-      setSettings(JSON.parse(saved));
+  useState<AccessibilitySettings>(() => {
+    if (typeof window === "undefined") {
+      return DEFAULT_SETTINGS;
     }
-  }, []);
+
+    const saved = window.localStorage.getItem(
+      "accessibility-settings"
+    );
+
+    if (!saved) {
+      return DEFAULT_SETTINGS;
+    }
+
+    try {
+      return {
+        ...DEFAULT_SETTINGS,
+        ...JSON.parse(saved),
+      };
+    } catch {
+      return DEFAULT_SETTINGS;
+    }
+  });
 
   useEffect(() => {
     localStorage.setItem("accessibility-settings", JSON.stringify(settings));
@@ -115,15 +110,4 @@ export function AccessibilityProvider({
       {children}
     </AccessibilityContext.Provider>
   );
-}
-
-export function useAccessibility() {
-  const context = useContext(AccessibilityContext);
-  if (!context) {
-    throw new Error(
-      "useAccessibility debe utilizarse dentro de AccessibilityProvider"
-    );
-  }
-
-  return context;
 }

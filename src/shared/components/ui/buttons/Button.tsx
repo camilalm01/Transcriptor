@@ -1,6 +1,6 @@
 import type { ButtonHTMLAttributes, } from "react";
 import { cn } from "../../../utils/cn";
-import { useAccessibility } from "../../../../contexts/AccessibilityContext";
+import { useAccessibility } from "../../../../contexts/useAccessibility";
 
 type Variant =
   | "primary"
