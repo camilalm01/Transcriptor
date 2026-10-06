@@ -5,7 +5,7 @@ import {
 
 import type { ReactNode } from "react";
 
-import type { AccessibilitySettings, NavigationMode } from "../shared/types/accessibility";
+import type { AccessibilitySettings, NavigationMode } from "../../shared/types/accessibility";
 import { AccessibilityContext } from "./accessibilityContextValue";
 
 interface Props {

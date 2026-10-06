@@ -3,7 +3,7 @@ import { createContext } from "react";
 import type {
   AccessibilitySettings,
   NavigationMode,
-} from "../shared/types/accessibility";
+} from "../../shared/types/accessibility";
 
 export interface AccessibilityContextType {
   settings: AccessibilitySettings;

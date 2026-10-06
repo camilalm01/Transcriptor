@@ -1,7 +1,7 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-import { useAccessibility } from "../../../../contexts/useAccessibility";
+import { useAccessibility } from "../../../../contexts/accessibility/useAccessibility";
 
 interface HeaderProps {
   title: string;

@@ -7,9 +7,11 @@ import Button from "../../../shared/components/ui/buttons/Button";
 
 import { useLoginForm } from "../hooks/useLoginForm";
 import { authService } from "../services/authService";
+import { useAuth } from "../../../contexts/auth/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const {login} = useAuth();
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,12 +40,17 @@ export default function LoginPage() {
           contrasena: password,
         });
 
-      console.log(
-        "Usuario autenticado:",
-        usuario
-      );
+      login({
+        id: usuario.id,
 
+        nombreCompleto:
+          usuario.nombreCompleto,
+
+        correo:
+          usuario.correo,
+      });
       navigate("/roles");
+      
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);

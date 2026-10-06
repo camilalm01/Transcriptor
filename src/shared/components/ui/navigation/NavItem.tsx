@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import type { LucideIcon } from "lucide-react";
 
-import { useAccessibility } from "../../../../contexts/useAccessibility";
+import { useAccessibility } from "../../../../contexts/accessibility/useAccessibility";
 
 interface NavItemProps {
   to: string;

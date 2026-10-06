@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import LoginPage from "../../features/auth/pages/LoginPage";
 import RegisterPage from "../../features/auth/pages/RegisterPage";
 import RoleSelectionPage from "../../features/auth/pages/RoleSelectionPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 // Main
 //import MeetingsPage from "../../features/meetings/pages/MeetingsPage";
@@ -20,7 +21,7 @@ export default function AppRoutes() {
 
             <Route path="/register" element={<RegisterPage />} />
 
-            <Route path="/roles" element={<RoleSelectionPage />} />
+            <Route path="/roles" element={<ProtectedRoute><RoleSelectionPage /></ProtectedRoute>} />
 
             {/* <Route path="/meetings" element={<MeetingsPage />}/> 
 
