@@ -35,11 +35,20 @@ export default function Button({
       {...props}
       className={cn(
         "rounded-2xl font-semibold transition-colors",
-
         fullWidth && "w-full",
+        "transition-all duration-200",
+        "active:scale-95",
+        "disabled:cursor-not-allowed",
+        "disabled:opacity-50",
 
         variant === "primary" &&
-        "bg-[#5F7EE7] text-white",
+        `bg-[#5F7EE7]
+          text-white
+          hover:bg-[#4F6FE8]
+          active:bg-[#4563D6]
+          shadow-md
+          hover:shadow-lg`,
+
 
         variant === "secondary" &&
         "bg-[#EEF3FF] text-[#1D317A]",

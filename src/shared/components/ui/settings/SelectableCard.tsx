@@ -4,7 +4,7 @@ import { cn } from "../../../utils/cn";
 
 interface SelectableCardProps {
   title: string;
-  description: string;
+  description?: string;
   icon?: LucideIcon;
   selected?: boolean;
   onClick?: () => void;
@@ -41,10 +41,11 @@ export default function SelectableCard({
           <h3 className="font-bold text-xl">
             {title}
           </h3>
-
-          <p className="text-base">
-            {description}
-          </p>
+            {description && (
+              <p className="text-sm text-slate-600 mt-1">
+                {description}
+              </p>
+            )}
         </div>
       </div>
 

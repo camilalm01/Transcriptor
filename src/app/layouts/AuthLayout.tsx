@@ -8,17 +8,10 @@ export default function AuthLayout({
   children,
 }: AuthLayoutProps) {
   return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        padding: "1rem",
-        backgroundColor: "#F5F7FB",
-      }}
-    >
-      {children}
-    </main>
+    <div className="min-h-dvh flex items-center justify-center px-4 py-6">
+      <div className="w-full max-w-md">
+        {children}
+      </div>
+    </div>
   );
 }
