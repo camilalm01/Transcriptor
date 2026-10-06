@@ -7,11 +7,11 @@ import RoleSelectionPage from "../../features/auth/pages/RoleSelectionPage";
 
 // Main
 //import MeetingsPage from "../../features/meetings/pages/MeetingsPage";
-import AccessibilityPage from "../../features/accessibility/pages/AccessibilityPage";
-import ProfilePage from "../../features/profile/pages/ProfilePage";
+//import AccessibilityPage from "../../features/accessibility/pages/AccessibilityPage";
+//import ProfilePage from "../../features/profile/pages/ProfilePage";
 
 // Recording
-import RecordPage from "../../features/recording/pages/RecordPage";
+//import RecordPage from "../../features/recording/pages/RecordPage";
 
 export default function AppRoutes() {
     return (
@@ -22,13 +22,13 @@ export default function AppRoutes() {
 
             <Route path="/roles" element={<RoleSelectionPage />} />
 
-            {/* <Route path="/meetings" element={<MeetingsPage />}/> */}
+            {/* <Route path="/meetings" element={<MeetingsPage />}/> 
 
             <Route path="/record" element={<RecordPage />}/>
 
             <Route path="/accessibility" element={<AccessibilityPage />} />
 
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile" element={<ProfilePage />} />*/}
         </Routes>
     );
 }
