@@ -6,17 +6,22 @@ import AuthLayout from "../../../app/layouts/AuthLayout";
 import Button from "../../../shared/components/ui/buttons/Button";
 import SelectableCard from "../../../shared/components/ui/settings/SelectableCard";
 
-export default function RoleSelectionPage() {
-  const [selectedRole, setSelectedRole] =
-    useState<
-      "speaker" | "viewer" | null
-    >(null);
+import { useAuth } from "../../../contexts/auth/useAuth";
 
+export default function RoleSelectionPage() {
+  const { role, setRole } = useAuth();
+  const [
+    selectedRole,
+    setSelectedRole,
+  ] = useState<
+    "speaker" | "viewer" | null
+  >(role);
   const navigate = useNavigate();
 
   const handleContinue = () => {
     if (!selectedRole) return;
 
+    setRole(selectedRole);
     navigate("/meetings");
   };
 
