@@ -42,9 +42,9 @@ export default function Button({
         "disabled:opacity-50",
 
         variant === "primary" &&
-        `bg-[#5F7EE7]
+        `bg-[#5B7CF0]
           text-white
-          hover:bg-[#4F6FE8]
+          hover:bg-[#4E70E8]
           active:bg-[#4563D6]
           shadow-md
           hover:shadow-lg`,
