@@ -1,98 +1,98 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
+import type { ReactNode } from "react";
 import { useAccessibility } from "../../../../contexts/accessibility/useAccessibility";
 
 interface HeaderProps {
   title: string;
   showBackButton?: boolean;
+  rightActions?: ReactNode;
 }
 
 export default function Header({
   title,
   showBackButton = false,
+  rightActions,
 }: HeaderProps) {
+
   const navigate = useNavigate();
 
-  const { settings } =
-    useAccessibility();
+  const { settings } = useAccessibility();
 
   const isSimple =
-    settings.navigationMode === "simple";
+    settings.navigationMode ===
+    "simple";
 
   return (
     <header
       role="banner"
-      style={{
-        backgroundColor: "#5F7EE7",
+      className="
+        bg-[var(--primary)]
+        text-white
 
-        color: "#FFFFFF",
+        flex
+        items-center
+        justify-between
 
-        display: "flex",
-        alignItems: "center",
-
-        minHeight: isSimple
-          ? "72px"
-          : "64px",
-
-        padding: isSimple
-          ? "0 20px"
-          : "0 16px",
-
-        gap: "12px",
-      }}
+        p-4
+        gap-4
+      "
     >
-      {showBackButton && (
-        <button
-          aria-label="Volver"
+      <div
+        className="
+          flex
+          items-center
+          gap-3
 
-          onClick={() => navigate(-1)}
-
-          style={{
-            width: isSimple
-              ? "56px"
-              : "48px",
-
-            height: isSimple
-              ? "56px"
-              : "48px",
-
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-
-            background: "transparent",
-
-            border: "none",
-
-            color: "#FFFFFF",
-
-            cursor: "pointer",
-          }}
-        >
-          <ArrowLeft
-            size={
-              isSimple
-                ? 30
-                : 24
-            }
-          />
-        </button>
-      )}
-
-      <h1
-        style={{
-          margin: 0,
-
-          fontSize: isSimple
-            ? "1.4rem"
-            : "1.2rem",
-
-          fontWeight: 600,
-        }}
+          min-w-0
+          flex-1
+        "
       >
-        {title}
-      </h1>
+        {showBackButton && (
+          <button
+            type="button"
+            aria-label="Volver"
+            onClick={() => navigate(-1)}
+            className=" shrink-0"
+          >
+            <ArrowLeft
+              size={
+                isSimple
+                  ? 28
+                  : 24
+              }
+            />
+          </button>
+        )}
+
+        <h1
+          className="
+            truncate
+
+            text-xl
+            sm:text-2xl
+            md:text-3xl
+            font-bold
+          "
+        >
+          {title}
+        </h1>
+      </div>
+
+      {rightActions && (
+        <div
+          className="
+            flex
+            items-center
+            gap-2
+
+            shrink-0
+          "
+        >
+          {rightActions}
+        </div>
+      )}
     </header>
   );
 }

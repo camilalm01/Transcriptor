@@ -19,45 +19,53 @@ export default function SelectableCard({
 }: SelectableCardProps) {
   return (
     <button
+      type="button"
       onClick={onClick}
+      aria-pressed={selected}
+      aria-label={selected ? ` seleccionado ` : `no seleccionado`}
       className={cn(
         "w-full",
         "rounded-3xl",
         "p-6",
         "flex items-center justify-between",
         "border",
+        "focus:outline-none",
+        "focus:ring-4",
+        "focus:ring-[var(--primary)]",
+        "text-[var(--text)]",
 
         selected
-          ? "border-[#5F7EE7] bg-[#EEF3FF]"
-          : "border-slate-300 bg-white"
+          ? "border-[var(--border)], bg-[var(--surface)]"
+          : "border-[var(--primary)]"
       )}
     >
       <div className="flex gap-4">
         {Icon && (
-          <Icon size={32} />
+          <Icon size={32} 
+          className="text-[var(--text)]"/>
         )}
 
         <div className="text-left">
-          <h3 className="font-bold text-xl">
+          <h3 className="font-bold text-xl text-[var(--text)]">
             {title}
           </h3>
-            {description && (
-              <p className="text-sm text-slate-600 mt-1">
-                {description}
-              </p>
-            )}
+          {description && (
+            <p className="text-sm text-[var(--text-secondary)] mt-1">
+              {description}
+            </p>
+          )}
         </div>
       </div>
 
       {selected ? (
         <CheckCircle2
           size={36}
-          color="#5F7EE7"
+          color="var(--primary)"
         />
       ) : (
         <Circle
           size={36}
-          color="#5F7EE7"
+          color="var(--primary)"
         />
       )}
     </button>

@@ -14,6 +14,7 @@ export default function SecondaryLayout({
         display: "flex",
         flexDirection: "column",
       }}
+      className="bg-app text-app"
     >
       <main
         style={{

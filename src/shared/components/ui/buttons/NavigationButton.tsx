@@ -19,7 +19,9 @@ export default function NavigationButton({
       className={cn(
         "w-full",
         "rounded-2xl",
-        "bg-[#EEF3FF]",
+        "bg-[var(--surface)]",
+        "border",
+        "border-[var(--border)]",
         "p-6",
         "flex items-center justify-between"
       )}
@@ -29,12 +31,12 @@ export default function NavigationButton({
           <Icon size={28} />
         )}
 
-        <span className="text-lg font-semibold">
+        <span className="text-lg font-semibold text-[var(--text)]">
           {title}
         </span>
       </div>
 
-      <ChevronRight />
+      <ChevronRight className="text-[var(--text)]" />
     </button>
   );
 }

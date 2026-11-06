@@ -27,7 +27,7 @@ export default function ParticipantCard({
             </h3>
 
             {role && (
-              <p className="text-slate-600">
+              <p className="text-[var(--text-secondary)] text-sm">
                 {role}
               </p>
             )}

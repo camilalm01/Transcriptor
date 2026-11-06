@@ -41,7 +41,7 @@ export default function DropdownItem({
 
         danger
           ? "text-red-500"
-          : "text-slate-800"
+          : "text-[var(--text-secondary)]"
       )}
     >
       <Icon size={22} />

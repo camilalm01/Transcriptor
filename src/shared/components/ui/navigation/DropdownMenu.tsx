@@ -101,7 +101,7 @@ export default function DropdownMenu({
             "border",
             "border-slate-200",
 
-            "bg-white",
+            "bg-[var(--bg)]",
 
             "shadow-lg",
 

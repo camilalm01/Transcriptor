@@ -4,6 +4,7 @@ import type {
 } from "react";
 
 import { cn } from "../../../utils/cn";
+import { Eye, EyeOff } from "lucide-react";
 
 type InputProps =
   InputHTMLAttributes<HTMLInputElement>;
@@ -35,12 +36,12 @@ export default function Input({
           "h-14",
           "rounded-2xl",
           "border",
-          "border-slate-300",
+          "border-[var(--border)]",
+          "bg-[var(--bg)]",
           "px-4",
-          "text-base",
+          "text-[var(--text)]",
           "outline-none",
           "transition-colors",
-          "focus:border-[#5F7EE7]",
 
           isPassword && "pr-12",
 
@@ -62,14 +63,23 @@ export default function Input({
               : "Mostrar contraseña"
           }
           className="
-            absolute
-            right-4
-            top-1/2
-            -translate-y-1/2
-            text-slate-500
-            hover:text-slate-700
-          "
+      absolute
+      right-4
+      top-1/2
+      -translate-y-1/2
+
+      text-[var(--primary)]
+
+      hover:opacity-80
+
+      transition-opacity
+    "
         >
+          {showPassword ? (
+            <EyeOff size={20} />
+          ) : (
+            <Eye size={20} />
+          )}
         </button>
       )}
     </div>

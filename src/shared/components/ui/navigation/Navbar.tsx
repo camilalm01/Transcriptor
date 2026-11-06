@@ -19,10 +19,10 @@ export default function Navbar() {
         left: 0,
         right: 0,
 
-        backgroundColor: "#FFFFFF",
+        backgroundColor: "var(--surface)",
 
         borderTop:
-          "1px solid #E5E7EB",
+          "1px solid var(--border)",
 
         display: "flex",
 
@@ -32,13 +32,13 @@ export default function Navbar() {
       }}
     >
       <NavItem
-        to="/record"
+        to="/recording/start"
         icon={Mic}
         label="Grabar"
       />
 
       <NavItem
-        to="/meetings"
+        to="/spaces"
         icon={FolderOpen}
         label="Reuniones"
       />

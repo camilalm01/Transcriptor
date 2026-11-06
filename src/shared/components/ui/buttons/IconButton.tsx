@@ -18,8 +18,8 @@ export default function IconButton({
       className={cn(
         "flex items-center justify-center",
         "h-18 w-18 rounded-2xl",
-        "bg-slate-100",
-        "hover:bg-slate-200",
+        "bg-[var(--primary)] text-[ var(--text-on-primary)]",
+        "hover:bg-[var(--primary-hover)]",
         className
       )}
     >

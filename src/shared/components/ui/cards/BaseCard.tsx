@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+
 import { cn } from "../../../utils/cn";
 
 interface BaseCardProps {
@@ -18,11 +19,15 @@ export default function BaseCard({
       className={cn(
         "w-full",
         "rounded-3xl",
-        "border",
-        "border-slate-300",
-        "bg-white",
-        "p-6",
+        "p-4",
         "text-left",
+
+        "border",
+
+        "bg-[var(--surface)]",
+
+        "border-[var(--border)]",
+
         className
       )}
     >

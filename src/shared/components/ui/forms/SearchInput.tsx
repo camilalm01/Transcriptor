@@ -13,15 +13,15 @@ export default function SearchInput({
       className={cn(
         "flex items-center gap-4",
         "w-full",
-        "h-16",
-        "rounded-2xl",
+        "h-12",
+        "rounded-1x1",
         "border",
         "border-slate-400",
         "px-5",
         className
       )}
     >
-      <Search size={32} />
+      <Search size={25} />
       <input
         {...props}
         className="w-full outline-none text-lg bg-transparent"

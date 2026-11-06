@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import Navbar from "../../shared/components/ui/navigation/Navbar";
+import EmailVerificationBanner from "../../features/auth/components/EmailVerificationBanner";
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -11,18 +12,17 @@ export default function MainLayout({
 }: MainLayoutProps) {
   return (
     <div
+      className="min-h-screen"
       style={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
+        backgroundColor:
+          "var(--background)",
+
+        color:
+          "var(--text)",
       }}
     >
-      <main
-        style={{
-          flex: 1,
-          paddingBottom: "80px",
-        }}
-      >
+      <EmailVerificationBanner />
+      <main className="pb-24">
         {children}
       </main>
 
