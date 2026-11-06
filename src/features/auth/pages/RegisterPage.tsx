@@ -28,6 +28,7 @@ export default function RegisterPage() {
         email, setEmail,
         password,setPassword,
         confirmPassword, setConfirmPassword,
+        acceptTerms, setAcceptTerms,
         passwordRules,
         isValid,
     } = useRegisterForm();
@@ -47,18 +48,18 @@ export default function RegisterPage() {
 
         try {
             await authService.register({
-                nombreCompleto: fullName,
-                correo: email,
-                contrasena: password,
+                name: fullName.trim(),
+                email: email.trim(),
+                password,
             });
 
             setSuccess(
-                "Cuenta creada correctamente. Redirigiendo al inicio de sesión..."
+                "Cuenta creada. Te enviamos un correo para verificarla: revisa tu bandeja (y el spam). Redirigiendo al inicio de sesión..."
             );
 
             setTimeout(() => {
                 navigate("/");
-            }, 2000);
+            }, 5000);
         } catch (error) {
             if (error instanceof Error) {
                 setError(error.message);
@@ -90,7 +91,7 @@ export default function RegisterPage() {
 
                 {success && (
                     <div
-                        className=" mb-6 rounded-2xl borderborder-green-200 bg-green-50 px-4 py-3 text-sm text-green-600"
+                        className=" mb-6 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-600"
                     >
                         {success}
                     </div>
@@ -195,6 +196,20 @@ export default function RegisterPage() {
                                 </p>
                             )}
                     </div>
+
+                    <label className="flex items-start gap-3 text-sm">
+                        <input
+                            type="checkbox"
+                            checked={acceptTerms}
+                            onChange={(e) =>
+                                setAcceptTerms(e.target.checked)
+                            }
+                            className="mt-1 h-5 w-5"
+                        />
+                        <span>
+                            Acepto los términos y la política de privacidad.
+                        </span>
+                    </label>
 
                     <Button
                         type="submit" fullWidth size="lg" disabled={

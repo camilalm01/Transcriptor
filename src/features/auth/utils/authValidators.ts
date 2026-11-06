@@ -6,7 +6,8 @@ export const validateName = (
   value: string
 ): boolean => {
   const regex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-  return regex.test(value.trim());
+  const name = value.trim();
+  return regex.test(name) && name.length >= 2 && name.length <= 80;
 };
 
 export const validateEmail = (
@@ -19,7 +20,7 @@ export const validateEmail = (
 export const validatePassword = (
   value: string
 ): PasswordValidation => ({
-  minLength: value.length >= 8,
+  minLength: value.length >= 10,
   uppercase: /[A-Z]/.test(value),
   lowercase: /[a-z]/.test(value),
   number: /\d/.test(value),

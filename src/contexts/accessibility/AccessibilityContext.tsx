@@ -23,32 +23,51 @@ export function AccessibilityProvider({
   children,
 }: Props) {
   const [settings, setSettings] =
-  useState<AccessibilitySettings>(() => {
-    if (typeof window === "undefined") {
-      return DEFAULT_SETTINGS;
-    }
+    useState<AccessibilitySettings>(() => {
+      if (typeof window === "undefined") {
+        return DEFAULT_SETTINGS;
+      }
 
-    const saved = window.localStorage.getItem(
-      "accessibility-settings"
-    );
+      const saved = window.localStorage.getItem(
+        "accessibility-settings"
+      );
 
-    if (!saved) {
-      return DEFAULT_SETTINGS;
-    }
+      if (!saved) {
+        return DEFAULT_SETTINGS;
+      }
 
-    try {
-      return {
-        ...DEFAULT_SETTINGS,
-        ...JSON.parse(saved),
-      };
-    } catch {
-      return DEFAULT_SETTINGS;
-    }
-  });
+      try {
+        return {
+          ...DEFAULT_SETTINGS,
+          ...JSON.parse(saved),
+        };
+      } catch {
+        return DEFAULT_SETTINGS;
+      }
+    });
 
   useEffect(() => {
     localStorage.setItem("accessibility-settings", JSON.stringify(settings));
   }, [settings]);
+
+  useEffect(() => {
+
+    const root =
+      document.documentElement;
+
+    root.setAttribute(
+      "data-theme",
+      settings.theme
+    );
+
+  }, [settings.theme]);
+
+  useEffect(() => {
+
+    document.documentElement.style.fontSize =
+      `${settings.scale}%`;
+
+  }, [settings.scale]);
 
   const setNavigationMode = (
     mode: NavigationMode

@@ -66,7 +66,7 @@ function RuleItem({
           text-sm
           ${valid
                         ? "text-green-700"
-                        : "text-slate-600"
+                        : "text-[var(--primary)]"
                     }
         `}
             >
@@ -110,7 +110,7 @@ export default function PasswordRules({
                 <h3
                     className="
             font-semibold
-            text-slate-800
+            text-[var(--primary)]
           "
                 >
                     Requisitos de la contraseña
@@ -133,10 +133,10 @@ export default function PasswordRules({
                 )}
             </div>
 
-            <div className="space-y-2">
+            <div className="space-y-2 text-[var(--text-secondary)]">
                 <RuleItem
                     valid={rules.minLength}
-                    text="Mínimo 8 caracteres"
+                    text="Mínimo 10 caracteres"
                 />
 
                 <RuleItem

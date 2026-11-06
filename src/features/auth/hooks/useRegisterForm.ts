@@ -16,6 +16,8 @@ export function useRegisterForm() {
 
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [acceptTerms, setAcceptTerms] = useState(false);
+
   const passwordRules =
     useMemo(
       () =>
@@ -35,7 +37,8 @@ export function useRegisterForm() {
     passwordsMatch(
       password,
       confirmPassword
-    );
+    ) &&
+    acceptTerms;
 
 
   return {
@@ -43,6 +46,7 @@ export function useRegisterForm() {
     email, setEmail,
     password, setPassword,
     confirmPassword, setConfirmPassword,
+    acceptTerms, setAcceptTerms,
     passwordRules,
     isValid,
   };

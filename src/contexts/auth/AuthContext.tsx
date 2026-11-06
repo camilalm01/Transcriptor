@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { ReactNode } from "react";
 
@@ -8,24 +8,18 @@ import {
   type UserRole,
 } from "./authcontext";
 
+import {
+  refreshSession,
+  setAccessToken,
+  setSessionExpiredHandler,
+} from "../../api/client";
+import { authService } from "../../features/auth/services/authService";
+import { queryClient } from "../../lib/queryClient";
+
 interface AuthProviderProps {
   children: ReactNode;
 }
 
-function getStoredUser(): AuthUser | null {
-  const storedUser = sessionStorage.getItem("user");
-
-  if (!storedUser) {
-    return null;
-  }
-
-  try {
-    return JSON.parse(storedUser) as AuthUser;
-  } catch {
-    sessionStorage.removeItem("user");
-    return null;
-  }
-}
 function isValidRole(
   role: string
 ): role is UserRole {
@@ -51,43 +45,80 @@ function getStoredRole(): UserRole | null {
 }
 
 export function AuthProvider({ children }: AuthProviderProps) {
-  const [user, setUser] = useState<AuthUser | null>(getStoredUser);
+  // El usuario y el token viven solo en memoria: al recargar se recuperan con /auth/refresh.
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [role, setRoleState] = useState<UserRole | null>(getStoredRole);
+  const [loading, setLoading] = useState(true);
 
-  const login = (userData: AuthUser) => {
-    setUser(userData);
-    sessionStorage.setItem("user", JSON.stringify(userData));
-  };
-
-  const setRole = ( role: UserRole ) => {
-  if (!isValidRole(role)) {
-    return;
-  }
-  setRoleState(role);
-  sessionStorage.setItem(
-    "role",
-    role
-  );
-};
-
-  const logout = () => {
+  const clearSession = useCallback(() => {
+    setAccessToken(null);
     setUser(null);
     setRoleState(null);
-    sessionStorage.removeItem("user");
     sessionStorage.removeItem("role");
-  };
+    queryClient.clear();
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
+    setSessionExpiredHandler(clearSession);
+
+    // En StrictMode este efecto corre dos veces: refreshSession() comparte
+    // la misma promesa, así que solo sale una petición real.
+    refreshSession()
+      .then(({ user: sessionUser }) => {
+        if (active) setUser(sessionUser);
+      })
+      .catch(() => {
+        // sin cookie o sesión vencida: el usuario verá el login
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+      setSessionExpiredHandler(null);
+    };
+  }, [clearSession]);
+
+  const login = useCallback((userData: AuthUser) => {
+    setUser(userData);
+  }, []);
+
+  const setRole = useCallback((newRole: UserRole) => {
+    if (!isValidRole(newRole)) {
+      return;
+    }
+    setRoleState(newRole);
+    sessionStorage.setItem("role", newRole);
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await authService.logout();
+    } catch {
+      // aunque falle la red, se cierra la sesión local
+    } finally {
+      clearSession();
+    }
+  }, [clearSession]);
+
+  const value = useMemo(
+    () => ({
+      user,
+      role,
+      isAuthenticated: Boolean(user),
+      loading,
+      login,
+      logout,
+      setRole,
+    }),
+    [user, role, loading, login, logout, setRole]
+  );
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        role,
-        isAuthenticated: Boolean(user),
-        login,
-        logout,
-        setRole,
-      }}
-    >
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

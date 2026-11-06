@@ -4,10 +4,11 @@ export interface LoginForm {
 }
 
 export interface RegisterForm {
-  fullName: string;
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
+  acceptTerms: boolean;
 }
 
 export interface PasswordValidation {

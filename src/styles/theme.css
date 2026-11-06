@@ -1,6 +1,39 @@
 :root {
-  --primary: #5B7CF0;
-  --primary-light: #eef3ff;
-  --danger: #e77a7a;
+  --background: #f8fafc;
   --surface: #ffffff;
+
+  --text: #0f172a;
+  --text-secondary: #475569;
+
+  --primary: #5F7EE7;
+  --primary-surface: #E1E9F8;
+
+  --border: #cad0d8;
+
+}
+
+[data-theme="dark"] {
+  --background: #121212;
+  --surface: #1e1e1e;
+
+  --text: #f8fafc;
+  --text-secondary: #cbd5e1;
+
+  --primary: #7ea0ff;
+
+  --border: #334155;
+}
+
+[data-theme="high-contrast"] {
+  --background: #000000;
+
+  --surface: #000000;
+
+  --text: #ffffff;
+
+  --text-secondary: #ffffff;
+
+  --primary: #ffd400;
+
+  --border: #ffffff;
 }

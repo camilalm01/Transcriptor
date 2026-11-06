@@ -22,7 +22,7 @@ export default function RoleSelectionPage() {
     if (!selectedRole) return;
 
     setRole(selectedRole);
-    navigate("/meetings");
+    navigate("/spaces");
   };
 
   return (
@@ -30,7 +30,7 @@ export default function RoleSelectionPage() {
       <div
         className="
           h-full
-          bg-white
+          bg-(--surface)
           px-6
           pt-12
           flex
@@ -50,7 +50,7 @@ export default function RoleSelectionPage() {
           Selecciona un rol
         </h1>
 
-        <p className="text-center text-slate-600">
+        <p className="text-center text-(--text-secondary)">
           Elige el rol que mejor se adapte a tus necesidades.
         </p>
 

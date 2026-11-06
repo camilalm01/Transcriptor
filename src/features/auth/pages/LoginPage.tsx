@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 import AuthLayout from "../../../app/layouts/AuthLayout";
@@ -11,7 +11,9 @@ import { useAuth } from "../../../contexts/auth/useAuth";
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const {login} = useAuth();
+  const location = useLocation();
+  const { login, isAuthenticated, loading } = useAuth();
+  const from = (location.state as { from?: string } | null)?.from ?? "/roles";
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -20,6 +22,11 @@ export default function LoginPage() {
     password, setPassword,
     isValid,
   } = useLoginForm();
+
+  // Si la sesión se recuperó sola (cookie vigente), no se muestra el login.
+  if (!loading && isAuthenticated) {
+    return <Navigate to={from} replace />;
+  }
 
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
@@ -34,23 +41,11 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const usuario =
-        await authService.login({
-          correo: email,
-          contrasena: password,
-        });
+      const user = await authService.login(email, password);
 
-      login({
-        id: usuario.id,
+      login(user);
+      navigate(from, { replace: true });
 
-        nombreCompleto:
-          usuario.nombreCompleto,
-
-        correo:
-          usuario.correo,
-      });
-      navigate("/roles");
-      
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
@@ -140,13 +135,19 @@ export default function LoginPage() {
           </div>
 
           <Button
-            type="submit" fullWidth size="lg" 
+            type="submit" fullWidth size="lg" disabled={!isValid || isLoading}
           >
             {isLoading
               ? "Ingresando..."
               : "Iniciar sesión"}
           </Button>
         </form>
+
+        <p className="mt-6 text-center">
+          <Link to="/olvide-contrasena" className="font-semibold text-blue-600">
+            ¿Olvidaste tu contraseña?
+          </Link>
+        </p>
 
         <p className=" mt-10 text-center ">
           ¿No tienes cuenta?{" "}

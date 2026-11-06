@@ -1,0 +1,99 @@
+export type RecordingStatus =
+  | "RECORDING"
+  | "UPLOADED"
+  | "TRANSCRIBING"
+  | "SUMMARIZING"
+  | "READY"
+  | "PARTIAL"
+  | "FAILED";
+
+export type RecordingVisibility =
+  | "PRIVATE"
+  | "PUBLISHED";
+
+export type RecordingRole =
+  | "OWNER"
+  | "MEMBER";
+
+export interface RecordingProgress {
+  transcript: number;
+  summary: number;
+}
+
+export interface Recording {
+  id: string;
+  spaceId: string;
+  title: string;
+  status: RecordingStatus;
+  visibility: RecordingVisibility;
+  myRole: RecordingRole;
+  durationSec: number;
+  createdAt: string;
+  updatedAt: string;
+  progress?: RecordingProgress;
+  keywords?: string[];
+  topics?: string[]
+  source?: string;
+  audioUrl?: string;
+}
+
+export interface RecordingPageResponse {
+  items: Recording[];
+
+  nextCursor: string | null;
+}
+export interface CreateRecordingResponse {
+  id: string;
+}
+
+/* ------------------------------------------------------------------ */
+/* Transcript                                                         */
+/* ------------------------------------------------------------------ */
+
+export interface TranscriptSegment {
+  start: number;
+
+  end: number;
+
+  speaker?: string;
+
+  text: string;
+}
+
+export interface TranscriptResponse {
+  id: string;
+
+  segments: TranscriptSegment[];
+}
+
+/* ------------------------------------------------------------------ */
+/* Summary                                                            */
+/* ------------------------------------------------------------------ */
+
+export interface SummaryResponse {
+  summary: string;
+  topics: string[];
+  keywords: string[];
+  actionItems: string[];
+}
+
+/* ------------------------------------------------------------------ */
+/* Recursos complementarios                                           */
+/* ------------------------------------------------------------------ */
+
+export interface RecordingResource {
+  id: string;
+  title: string;
+  url: string;
+}
+
+/* ------------------------------------------------------------------ */
+/* Filtros                                                            */
+/* ------------------------------------------------------------------ */
+
+export interface RecordingsFilter {
+  spaceId?: string;
+  status?: RecordingStatus;
+  visibility?: RecordingVisibility;
+  q?: string;
+}

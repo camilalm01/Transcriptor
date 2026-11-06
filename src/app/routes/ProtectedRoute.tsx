@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
 import type { ReactNode } from "react";
 
@@ -11,14 +11,28 @@ interface ProtectedRouteProps {
 export default function ProtectedRoute({
   children,
 }: ProtectedRouteProps) {
-  const {
-    isAuthenticated,
-  } = useAuth();
+  const { isAuthenticated, loading } = useAuth();
+  const location = useLocation();
+
+  // Mientras se recupera la sesión no se redirige: evita mandar al login por error.
+  if (loading) {
+    return (
+      <div
+        role="status"
+        aria-live="polite"
+        className="min-h-dvh flex items-center justify-center"
+      >
+        Cargando...
+      </div>
+    );
+  }
 
   if (!isAuthenticated) {
     return (
       <Navigate
-        to="/" replace
+        to="/"
+        replace
+        state={{ from: `${location.pathname}${location.search}` }}
       />
     );
   }
