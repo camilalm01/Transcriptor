@@ -1,35 +1,65 @@
-import type {RecordingStatus} from "../types/recordings.types";
+import type { Recording } from "../types/recordings.types";
 
 interface Props {
-  status: RecordingStatus;
+  recording: Recording;
 }
 
 export default function RecordingStatusBadge({
-  status,
+  recording,
 }: Props) {
 
-  const styles = {
-    RECORDING:
-      "bg-red-100 text-red-700",
+  let label = "";
+  let styles = "";
 
-    UPLOADED:
-      "bg-yellow-100 text-yellow-700",
+  if (recording.status === "FAILED") {
+    label = "Error";
+    styles =
+      "bg-red-100 text-red-700";
+  }
 
-    TRANSCRIBING:
-      "bg-yellow-100 text-yellow-700",
+  else if (
+    [
+      "RECORDING",
+      "UPLOADED",
+      "TRANSCRIBING",
+      "SUMMARIZING",
+    ].includes(recording.status)
+  ) {
+    label = "Procesando";
 
-    SUMMARIZING:
-      "bg-yellow-100 text-yellow-700",
+    styles =
+      "bg-yellow-100 text-yellow-700";
+  }
 
-    READY:
-      "bg-green-100 text-green-700",
+  else if (recording.status === "READY") {
 
-    PARTIAL:
-      "bg-orange-100 text-orange-700",
+    const isPublished =
+      recording.myRole === "MEMBER" ||
+      recording.visibility ===
+      "PUBLISHED";
 
-    FAILED:
-      "bg-red-100 text-red-700",
-  };
+    label = isPublished
+      ? "Publicada"
+      : "Por publicar";
+
+    styles = isPublished
+      ? "bg-green-100 text-green-700"
+      : "bg-blue-100 text-blue-700";
+  }
+  else if (recording.status === "PARTIAL") {
+    label = "Parcial";
+
+    styles =
+      "bg-orange-100 text-orange-700";
+  }
+
+  else {
+    label = recording.status;
+
+    styles =
+      "bg-slate-100 text-slate-700";
+  }
+
 
   return (
     <span
@@ -39,10 +69,10 @@ export default function RecordingStatusBadge({
         py-1
         text-xs
         font-semibold
-        ${styles[status]}
+        ${styles}
       `}
     >
-      {status}
+      {label}
     </span>
   );
 }

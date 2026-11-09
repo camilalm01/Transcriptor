@@ -16,10 +16,21 @@ export interface StartRecordingRequest {
   title: string;
 
   consent: boolean;
+
+  /** Difundir subtítulos en vivo a los miembros del espacio */
+  liveCaptions?: boolean;
 }
 
 export interface StartRecordingResponse {
-  id: string;
+  recording: {
+    id: string;
+  };
+
+  chunkSeconds: number;
+
+  maxChunks: number;
+
+  uploadUrlTemplate: string;
 }
 
 export interface UploadChunkRequest {
@@ -32,4 +43,5 @@ export interface UploadChunkRequest {
 
 export interface FinishRecordingRequest {
   recordingId: string;
+    lastSeq: number;
 }

@@ -10,9 +10,8 @@ import Input from "../../../shared/components/ui/forms/Input";
 import { useAccessibility } from "../../../contexts/accessibility/useAccessibility";
 import { useRecordingContext } from "../../../contexts/recording/useRecordingContext";
 
-import { useOwnedSpaces } from "../../spaces/hooks/useOwnedSpaces";
-import { useSpaceActions } from "../../spaces/hooks/useSpaceActions";
-
+import { useSpaces } from "../../spaces/hooks/useSpaces";
+import { useAuth } from "../../../contexts/auth/useAuth"; import { useCreateSpace } from "../../spaces/hooks/useSpaceActions";
 import type { Space } from "../../spaces/types/spaces.types";
 
 export default function SessionSetupPage() {
@@ -20,8 +19,7 @@ export default function SessionSetupPage() {
 
   const { settings } = useAccessibility();
 
-  const isSimple =
-    settings.navigationMode === "simple";
+  const isSimple = settings.navigationMode === "simple";
 
   const {
     setSpaceId,
@@ -31,39 +29,30 @@ export default function SessionSetupPage() {
     setComment,
   } = useRecordingContext();
 
+  const { user } = useAuth();
+
   const {
     data: spaces = [],
     isLoading,
-  } = useOwnedSpaces();
+  } = useSpaces(
+    user?.id ?? "",
+    "speaker"
+  );
+  const createSpace = useCreateSpace();
 
-  const {
-    createSpace,
-  } = useSpaceActions();
-
-  const [selectedSpaceId, setSelectedSpaceId] =
-    useState("");
-
-  const [newSpaceName, setNewSpaceName] =
-    useState("");
-
-  const [sessionName, setSessionName] =
-    useState("");
-
-  const [commentValue, setCommentValue] =
-    useState("");
-
-  const [hasConsent, setHasConsent] =
-    useState(false);
+  const [selectedSpaceId, setSelectedSpaceId] = useState("");
+  const [newSpaceName, setNewSpaceName] = useState("");
+  const [sessionName, setSessionName] = useState("");
+  const [commentValue, setCommentValue] = useState("");
+  const [hasConsent, setHasConsent] = useState(false);
 
   const handleContinue = async () => {
     if (!sessionName.trim()) {
       return;
     }
-
     if (!hasConsent) {
       return;
     }
-
     setSessionTitle(sessionName);
     setComment(commentValue);
 
@@ -83,9 +72,7 @@ export default function SessionSetupPage() {
         setSpaceName(space.name);
       } else {
         const newSpace =
-          await createSpace.mutateAsync({
-            name: newSpaceName,
-          });
+          await createSpace.mutateAsync(newSpaceName);
 
         setSpaceId(newSpace.id);
         setInviteCode(
@@ -167,7 +154,7 @@ export default function SessionSetupPage() {
                 </option>
               )}
 
-            {spaces.map((space) => (
+            {spaces.map((space: Space) => (
               <option
                 key={space.id}
                 value={space.id}
@@ -206,10 +193,9 @@ export default function SessionSetupPage() {
             border-(--border)
             p-4
             transition-opacity
-            ${
-              selectedSpaceId
-                ? "opacity-50"
-                : ""
+            ${selectedSpaceId
+              ? "opacity-50"
+              : ""
             }
           `}
         >

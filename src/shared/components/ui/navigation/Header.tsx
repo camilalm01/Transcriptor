@@ -28,7 +28,7 @@ export default function Header({
     <header
       role="banner"
       className="
-        bg-[var(--primary)]
+        bg-(--primary)
         text-white
 
         flex

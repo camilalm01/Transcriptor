@@ -1,33 +1,36 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { LayoutGrid, Plus } from "lucide-react";
+
 import MainLayout from "../../../../app/layouts/MainLayout";
 
 import Button from "../../../../shared/components/ui/buttons/Button";
 import SearchInput from "../../../../shared/components/ui/forms/SearchInput";
-import SpaceCard from "../../../spaces/components/SpaceCard";
+import SpaceCardSimple from "../../../spaces/components/SpaceCardSimple";
+import { useDebouncedValue } from "../../../../shared/hooks/useDebouncedValue";
 
-import { useOwnedSpaces } from "../../../spaces/hooks/useOwnedSpaces";
-import { LayoutGrid, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../../contexts/auth/useAuth";
+import { useSpaces } from "../../../spaces/hooks/useSpaces";
 
-export default function SpeakerSimpleMeetingsView() {
+export default function SpeakerSimpleSpacesView() {
 
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const [search, setSearch] = useState("");
+  const q = useDebouncedValue(search.trim(), 300);
 
   const {
     data: spaces = [],
     isLoading,
     error,
-  } = useOwnedSpaces();
-  const navigate = useNavigate();
+  } = useSpaces(user?.id ?? "", "speaker", { q });
+
   return (
     <MainLayout>
       <div className="space-y-6 ">
 
-        <div
-          className="
-            bg-[#5B7CF0]
-            p-4
-            text-white
-          "
-        >
+        <div className="bg-[#5B7CF0] p-4 text-white">
           <div className="flex justify-between">
             <div>
               <h1 className="text-4xl font-bold">
@@ -62,16 +65,19 @@ export default function SpeakerSimpleMeetingsView() {
 
           <SearchInput
             placeholder="Buscar reunión..."
+            aria-label="Buscar reunión"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           {isLoading && (
-            <p>
+            <p role="status">
               Cargando reuniones...
             </p>
           )}
 
           {error && (
-            <p className="text-red-500">
+            <p role="alert" className="text-red-500">
               {error instanceof Error
                 ? error.message
                 : "Error cargando reuniones"}
@@ -79,21 +85,11 @@ export default function SpeakerSimpleMeetingsView() {
           )}
 
           {spaces.map((space) => (
-            <SpaceCard
-              key={space.id}
+            <SpaceCardSimple
               title={space.name}
-              recordingCount={0}
-              memberCount={0}
-              secondaryInfo={
-                new Date(
-                  space.createdAt
-                ).toLocaleDateString()
-              }
-              onClick={() =>
-                navigate(
-                  `/spaces/${space.id}/recordings`
-                )
-              }
+              participants={space.memberCounts?.approved ?? 0}
+              pendingRequests={space.memberCounts?.pending ?? 0}
+              onClick={() => navigate(`/spaces/${space.id}/recordings`)}
             />
           ))}
         </div>

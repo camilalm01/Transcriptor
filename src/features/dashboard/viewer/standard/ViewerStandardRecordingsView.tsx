@@ -1,96 +1,114 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
-import MainLayout from "../../../../app/layouts/MainLayout";
-import Header from "../../../../shared/components/ui/navigation/Header";
-import SearchInput from "../../../../shared/components/ui/forms/SearchInput";
-
-import SortSelector from "../../../../shared/components/filters/SortSelector";
 import {
-  sortByDate,
-  type SortOption,
+  useMemo,
+  useState,
+} from "react";
+
+import { useNavigate, useParams } from "react-router-dom";
+import SearchInput from "../../../../shared/components/ui/forms/SearchInput";
+import SortSelector from "../../../../shared/components/filters/SortSelector";
+
+import type {
+  SortOption,
 } from "../../../../shared/utils/sortByDate";
 
-import { useRecordings } from "../../../../features/recordings/hooks/useRecordings";
-import RecordingCard from "../../../../features/recordings/components/RecordingCard";
+import RecordingCardStandard from "../../../recordings/components/RecordingCardStandard";
+import { useRecordings } from "../../../recordings/hooks/useRecordings";
+import type {
+  Recording,
+} from "../../../recordings/types/recordings.types";
+
 
 export default function ViewerStandardRecordingsView() {
 
   const navigate = useNavigate();
   const { spaceId } = useParams();
-
-  const [sort, setSort] = useState<SortOption>("newest");
   const [search, setSearch] = useState("");
-  const {
-      data: recordings = [],
-      isLoading,
-      error,
-    } = useRecordings({
-      spaceId,
-      q: search,
-    });
+  const [sort, setSort] = useState<SortOption>("newest");
 
-  const sortedRecordings =
-    sortByDate(
+  const {
+    data: recordings = [],
+    isLoading,
+  } = useRecordings({
+    spaceId,
+    q: search,
+  });
+
+  console.log(recordings);
+  const sorted =
+    useMemo(() => {
+
+      const data = [...recordings,];
+
+      data.sort((a, b) =>
+        sort === "newest"
+          ? Date.parse(
+            b.createdAt
+          ) -
+          Date.parse(
+            a.createdAt
+          )
+          : Date.parse(
+            a.createdAt
+          ) -
+          Date.parse(
+            b.createdAt
+          )
+      );
+
+      return data;
+
+    }, [
       recordings,
-      sort
-    );
+      sort,
+    ]);
+
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
 
   return (
-    <MainLayout>
+    <div className="space-y-5">
 
-      <div className="p-4 space-y-6">
+      <SearchInput
+        value={search}
+        onChange={(e) =>
+          setSearch(
+            e.target.value
+          )
+        }
+        placeholder="Buscar grabaciones..."
+      />
 
-        <Header
-          title="Grabaciones"
-          showBackButton
-        />
-
-        <SearchInput
-          placeholder="Buscar reuniones..."
-          value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
-        />
-
+      <div
+        className="
+          flex
+          justify-end
+        "
+      >
         <SortSelector
           value={sort}
           onChange={setSort}
         />
+      </div>
 
-        {isLoading && (
-          <p>
-            Cargando grabaciones...
-          </p>
-        )}
-
-        {error && (
-          <p className="text-red-500">
-            {error instanceof Error
-              ? error.message
-              : "Error cargando grabaciones"}
-          </p>
-        )}
-
-        {sortedRecordings.map(
-          (recording) => (
-            <RecordingCard
+      <div className="space-y-3">
+        {sorted.map(
+          (
+            recording: Recording
+          ) => (
+            <RecordingCardStandard
               key={recording.id}
               recording={recording}
-              onClick={() =>
+              onOpen={() =>
                 navigate(
-                  `/recordings/${recording.id}`
+                  `/recordings/${recording.id}/details`
                 )
               }
             />
           )
         )}
-
       </div>
 
-    </MainLayout>
+    </div>
   );
 }

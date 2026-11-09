@@ -6,13 +6,9 @@ export function useSpace(
   spaceId?: string
 ) {
   return useQuery({
-    queryKey: ["spaces", spaceId],
-
+    queryKey: ["spaces", spaceId ],
     queryFn: () =>
-      spacesService.getSpaceById(
-        spaceId!
-      ),
-
-    enabled: Boolean(spaceId),
+      spacesService.getById(spaceId!),
+    enabled: !!spaceId,
   });
 }

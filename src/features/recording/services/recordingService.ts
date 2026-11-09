@@ -88,12 +88,16 @@ export const recordingService = {
 
   finishRecording({
     recordingId,
+    lastSeq,
   }: FinishRecordingRequest) {
 
     return api(
       `/recordings/${recordingId}/finish`,
       {
         method: "POST",
+        json: {
+          lastSeq,
+        },
       }
     );
   },

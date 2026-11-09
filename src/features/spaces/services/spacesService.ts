@@ -1,100 +1,100 @@
-import { api } from "../../../api/client";
+import { api, apiFetch } from "../../../api/client";
+import { fetchAllPages } from "../../../api/pagination";
 
 import type {
-  CreateSpaceRequest,
-  JoinSpaceRequest,
-  JoinSpaceResponse,
+  BulkDecisionResult,
+  JoinResult,
+  MemberAction,
+  MembershipStatus,
+  MyMembership,
   Space,
-  SpacePageResponse,
+  SpaceFilters,
+  SpaceInvite,
+  SpaceMember,
+  SpaceSettings,
 } from "../types/spaces.types";
 
-export interface SpacesFilter {
-  q?: string;
-}
-
 export const spacesService = {
-  async getOwnedSpaces(
-    filters?: SpacesFilter
-  ): Promise<Space[]> {
+  /** role=owner → reuniones que dirijo; role=member → reuniones a las que pertenezco. */
+  list(role: "owner" | "member", filters: SpaceFilters = {}): Promise<Space[]> {
+    return fetchAllPages<Space>("/spaces", { role, ...filters });
+  },
 
-    const params = new URLSearchParams();
+  getById(id: string): Promise<Space> {
+    return api<Space>(`/spaces/${id}`);
+  },
 
-    params.append(
-      "role",
-      "owner"
-    );
+  create(name: string, description?: string): Promise<Space> {
+    return api<Space>("/spaces", {
+      method: "POST",
+      json: { name, description },
+    });
+  },
 
-    if (filters?.q) {
-      params.append(
-        "q",
-        filters.q
-      );
+  join(code: string): Promise<JoinResult> {
+    return api<JoinResult>("/join", { method: "POST", json: { code } });
+  },
+
+  myMemberships(): Promise<MyMembership[]> {
+    return api<MyMembership[]>("/memberships/me");
+  },
+
+  leave(id: string): Promise<void> {
+    return api<void>(`/spaces/${id}/leave`, { method: "POST" });
+  },
+
+  updateSettings(id: string, settings: SpaceSettings): Promise<Space> {
+    return api<Space>(`/spaces/${id}`, { method: "PATCH", json: { settings } });
+  },
+
+  update(id: string, data: { name?: string; description?: string;   }): Promise<Space> {
+    return api<Space>(`/spaces/${id}`, {method: "PATCH", json: data,});
+  },
+
+  delete(id: string): Promise<void> {
+    return api<void>(`/spaces/${id}`, {method: "DELETE"});
+  }, 
+
+  /* ---------------- Miembros (solo dueño) ---------------- */
+
+  listMembers(spaceId: string, status?: MembershipStatus): Promise<SpaceMember[]> {
+    return fetchAllPages<SpaceMember>(`/spaces/${spaceId}/members`, { status });
+  },
+
+  decide(spaceId: string, userId: string, action: MemberAction): Promise<void> {
+    if (action === "remove") {
+      return api<void>(`/spaces/${spaceId}/members/${userId}`, { method: "DELETE" });
     }
-
-    const response =
-      await api<SpacePageResponse>(
-        `/spaces?${params.toString()}`
-      );
-
-    return response.items;
+    return api<void>(`/spaces/${spaceId}/members/${userId}/${action}`, { method: "POST" });
   },
 
-  async getMemberSpaces(
-    filters?: SpacesFilter
-  ): Promise<Space[]> {
-
-    const params =
-      new URLSearchParams();
-
-    params.append(
-      "role",
-      "member"
-    );
-
-    if (filters?.q) {
-      params.append(
-        "q",
-        filters.q
-      );
-    }
-
-    const response =
-      await api<SpacePageResponse>(
-        `/spaces?${params.toString()}`
-      );
-
-    return response.items;
+  bulkDecision(
+    spaceId: string,
+    action: "approve" | "reject",
+    userIds: string[]
+  ): Promise<BulkDecisionResult> {
+    return api<BulkDecisionResult>(`/spaces/${spaceId}/members/bulk`, {
+      method: "POST",
+      json: { action, userIds },
+    });
   },
 
-  getSpaceById(
-    id: string
-  ): Promise<Space> {
-    return api<Space>(
-      `/spaces/${id}`
-    );
+  /* ---------------- Invitación (solo dueño) ---------------- */
+
+  rotateInvite(spaceId: string): Promise<SpaceInvite> {
+    return api<SpaceInvite>(`/spaces/${spaceId}/invite/rotate`, { method: "POST" });
   },
 
-  createSpace(
-    data: CreateSpaceRequest
-  ): Promise<Space> {
-    return api<Space>(
-      "/spaces",
-      {
-        method: "POST",
-        json: data,
-      }
-    );
+  updateInvite(
+    spaceId: string,
+    patch: { active?: boolean; expiresAt?: string | null; maxUses?: number | null }
+  ): Promise<SpaceInvite> {
+    return api<SpaceInvite>(`/spaces/${spaceId}/invite`, { method: "PATCH", json: patch });
   },
 
-  joinSpace(
-    data: JoinSpaceRequest
-  ): Promise<JoinSpaceResponse> {
-    return api<JoinSpaceResponse>(
-      "/join",
-      {
-        method: "POST",
-        json: data,
-      }
-    );
+  /** El QR exige el header Authorization, así que se descarga como blob y se muestra con una URL local. */
+  async getInviteQr(spaceId: string): Promise<string> {
+    const res = await apiFetch(`/spaces/${spaceId}/invite/qr?format=svg`);
+    return URL.createObjectURL(await res.blob());
   },
 };

@@ -1,33 +1,40 @@
-import MainLayout from "../../../../app/layouts/MainLayout";
-import SearchInput from "../../../../shared/components/ui/forms/SearchInput"; 
-import Button from "../../../../shared/components/ui/buttons/Button";
-
-import SpaceCard from "../../../spaces/components/SpaceCard";
-import { LayoutGrid, Plus } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useMemberSpaces } from "../../../spaces/hooks/useMemberSpaces";
+import { LayoutGrid, Plus } from "lucide-react";
 
-export default function ViewerSimpleMeetingsView() {
+import MainLayout from "../../../../app/layouts/MainLayout";
 
+import Button from "../../../../shared/components/ui/buttons/Button";
+import SearchInput from "../../../../shared/components/ui/forms/SearchInput";
+import SpaceCard from "../../../spaces/components/SpaceCard";
+import { useDebouncedValue } from "../../../../shared/hooks/useDebouncedValue";
+
+import { useAuth } from "../../../../contexts/auth/useAuth";
+import { useSpaces } from "../../../spaces/hooks/useSpaces";
+import JoinSpaceModal from "../../../spaces/components/JoinSpaceModal";
+import MembershipRequests from "../../../spaces/components/MembershipRequests";
+import LiveNowList from "../../../live/components/LiveNowList";
+
+export default function ViewerSimpleSpacesView() {
+
+  const { user } = useAuth();
   const navigate = useNavigate();
+
+  const [search, setSearch] = useState("");
+  const [joinOpen, setJoinOpen] = useState(false);
+  const q = useDebouncedValue(search.trim(), 300);
 
   const {
     data: spaces = [],
     isLoading,
     error,
-  } = useMemberSpaces();
+  } = useSpaces(user?.id ?? "", "viewer", { q });
 
   return (
     <MainLayout>
       <div className="space-y-6">
 
-        <div
-          className="
-            bg-[#5B7CF0]
-            p-6
-            text-white
-          "
-        >
+        <div className="bg-[#5B7CF0] p-6 text-white">
           <div className="flex justify-between">
             <h1 className="text-4xl font-bold">
               Bienvenido
@@ -48,22 +55,29 @@ export default function ViewerSimpleMeetingsView() {
           <Button
             fullWidth
             size="lg"
-            onClick={() => { navigate("/spaces/join"); }}
+            onClick={() => setJoinOpen(true)}
           >
             <Plus />
-            Unirse a nueva sesión
+            Unirse a una reunión
           </Button>
+
+          <LiveNowList />
+
+        <MembershipRequests />
 
           <SearchInput
             placeholder="Buscar reuniones..."
+            aria-label="Buscar reuniones"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
 
           {isLoading && (
-            <p>Cargando reuniones...</p>
+            <p role="status">Cargando reuniones...</p>
           )}
 
           {error && (
-            <p className="text-red-500">
+            <p role="alert" className="text-red-500">
               {error instanceof Error
                 ? error.message
                 : "Error cargando reuniones"}
@@ -74,23 +88,21 @@ export default function ViewerSimpleMeetingsView() {
             <SpaceCard
               key={space.id}
               title={space.name}
-              recordingCount={0}
-              memberCount={0}
-              secondaryInfo={
-                new Date(
-                  space.createdAt
-                ).toLocaleDateString()
-              }
-              onClick={() =>
-                navigate(
-                  `/spaces/${space.id}/recordings`
-                )
-              }
+              secondaryInfo={`Organiza ${space.owner.name}`}
+              onClick={() => {
+                navigate(`/spaces/${space.id}/recordings`, {
+                  state: { meetingName: space.name },
+                });
+              }}
             />
           ))}
         </div>
       </div>
+
+      <JoinSpaceModal
+        isOpen={joinOpen}
+        onClose={() => setJoinOpen(false)}
+      />
     </MainLayout>
   );
 }
-                  

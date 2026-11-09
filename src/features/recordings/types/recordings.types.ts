@@ -15,6 +15,11 @@ export type RecordingRole =
   | "OWNER"
   | "MEMBER";
 
+export type RecordingTab =
+  | "published"
+  | "draft"
+  | "processing";
+  
 export interface RecordingProgress {
   transcript: number;
   summary: number;
@@ -70,11 +75,38 @@ export interface TranscriptResponse {
 /* Summary                                                            */
 /* ------------------------------------------------------------------ */
 
+export interface SummaryTopic {
+  nombre: string;
+  puntosClave: string[];
+  minutoAprox?: string;
+}
+
+export interface SummaryDefinition {
+  termino: string;
+  definicion: string;
+}
+
+export interface SummaryTask {
+  descripcion: string;
+  fecha?: string | null;
+}
+
+export interface SummaryContent {
+  titulo: string;
+  resumenGeneral: string;
+  temas: SummaryTopic[];
+  definiciones: SummaryDefinition[];
+  tareasYFechas: SummaryTask[];
+  preguntasDeRepaso: string[];
+  palabrasClave: string[];
+}
+
 export interface SummaryResponse {
-  summary: string;
-  topics: string[];
-  keywords: string[];
-  actionItems: string[];
+  version: number;
+  source: string;
+  basedOn: string;
+  createdAt: string;
+  content: SummaryContent;
 }
 
 /* ------------------------------------------------------------------ */

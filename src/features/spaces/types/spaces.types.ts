@@ -1,18 +1,6 @@
-export type SpaceRole =
-  | "OWNER"
-  | "MEMBER";
+/** En la API una "reunión" del front es un Space (espacio) y el dueño es el orador. */
 
-export type SpaceStatus =
-  | "ACTIVE"
-  | "DISABLED_BY_ADMIN";
-
-export interface SpaceSettings {
-  autoPublish: boolean;
-  showTranscript: boolean;
-  allowExport: boolean;
-  liveCaptions: boolean;
-  glossary: string[];
-}
+export type SpaceRole = "OWNER" | "MEMBER";
 
 export interface SpaceInvite {
   code: string;
@@ -24,38 +12,84 @@ export interface SpaceInvite {
   rotatedAt: string;
 }
 
+export interface SpaceSettings {
+  autoPublish?: boolean;
+  showTranscript?: boolean;
+  allowExport?: boolean;
+  liveCaptions?: boolean;
+  glossary?: string[];
+}
+
 export interface Space {
   id: string;
   name: string;
   description: string;
   myRole: SpaceRole;
-  owner: unknown;
+  owner: { id: string; name: string };
   settings: SpaceSettings;
-  status: SpaceStatus;
-  memberCounts?: Record<string, number>;
+  status: "ACTIVE" | "DISABLED_BY_ADMIN";
+  /** Solo para el dueño */
+  memberCounts?: { approved: number; pending: number };
+  /** Solo para el dueño */
   invite?: SpaceInvite;
   createdAt: string;
   updatedAt: string;
 }
 
-export interface SpacePageResponse {
-  items: Space[];
-  nextCursor: string | null;
+export type SpaceSort =
+  | "createdAt:desc"
+  | "createdAt:asc"
+  | "name:asc"
+  | "name:desc";
+
+export interface SpaceFilters {
+  q?: string;
+  sort?: SpaceSort;
 }
 
-export interface CreateSpaceRequest {
+export type MembershipStatus =
+  | "PENDING"
+  | "APPROVED"
+  | "REJECTED"
+  | "REMOVED"
+  | "BLOCKED"
+  | "LEFT";
+
+export interface SpaceMember {
+  userId: string;
   name: string;
-  description?: string;
-  settings?: Partial<SpaceSettings>;
+  email: string;
+  status: MembershipStatus;
+  requestedAt: string;
+  decidedAt: string | null;
+  decidedBy: { id: string; name: string } | null;
+  requestCount: number;
 }
 
-export interface JoinSpaceRequest {
-  code: string;
+export interface MyMembership {
+  spaceId: string;
+  spaceName: string;
+  ownerName: string;
+  status: MembershipStatus;
+  requestedAt: string;
+  decidedAt: string | null;
 }
 
-export interface JoinSpaceResponse {
+export interface JoinResult {
   spaceId: string;
   spaceName: string;
   status: "PENDING";
   message: string;
+}
+
+export type MemberAction =
+  | "approve"
+  | "reject"
+  | "remove"
+  | "block"
+  | "unblock";
+
+export interface BulkDecisionResult {
+  updated: string[];
+  skipped: string[];
 }

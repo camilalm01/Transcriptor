@@ -5,7 +5,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-import Modal from "../modals/Modal";
+import Modal from "../ui/modals/Modal";
 
 import WeekRangeCalendar, {
   type DateRange,

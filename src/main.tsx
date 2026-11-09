@@ -9,6 +9,7 @@ import App from './App.tsx'
 import { AccessibilityProvider } from './contexts/accessibility/AccessibilityContext.tsx'
 import { AuthProvider } from './contexts/auth/AuthContext.tsx'
 import { RecordingProvider } from './contexts/recording/RecordingContext.tsx'
+import { RealtimeProvider } from './contexts/realtime/RealtimeContext.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -16,9 +17,11 @@ createRoot(document.getElementById('root')!).render(
       <QueryClientProvider client={queryClient}>
       <AccessibilityProvider>
         <AuthProvider>
-          <RecordingProvider>
-            <App />
-          </RecordingProvider>
+          <RealtimeProvider>
+            <RecordingProvider>
+              <App />
+            </RecordingProvider>
+          </RealtimeProvider>
         </AuthProvider>
       </AccessibilityProvider>
       </QueryClientProvider>

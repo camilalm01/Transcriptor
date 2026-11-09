@@ -26,7 +26,10 @@ export default function RecordingControls({
         <IconButton
           icon={Mic}
           aria-label="Iniciar grabación"
-          onClick={onStart}
+          onClick={() => {
+    console.log("MIC CLICK");
+    onStart();
+  }}
           className="
             h-20
             w-20

@@ -1,36 +1,47 @@
-import { useEffect, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
-import type { ReactNode } from "react";
-import { cn } from "../../../utils/cn";
+export interface MenuItem {
+  id: string;
+  label: string;
+  icon?: ReactNode;
+  danger?: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+}
 
-type Placement =
-  | "left"
-  | "right";
-
-interface DropdownMenuProps {
+interface Props {
   trigger: ReactNode;
-  children: ReactNode;
-
-  placement?: Placement;
-
-  closeOnItemClick?: boolean;
+  items: MenuItem[];
 }
 
 export default function DropdownMenu({
   trigger,
-  children,
-
-  placement = "right",
-
-  closeOnItemClick = true,
-}: DropdownMenuProps) {
-  const [isOpen, setIsOpen] =
+  items,
+}: Props) {
+  const [open, setOpen] =
     useState(false);
+
+  const [focusedIndex, setFocusedIndex] =
+    useState(0);
 
   const containerRef =
     useRef<HTMLDivElement>(null);
 
+  const itemRefs =
+    useRef<
+      Array<HTMLButtonElement | null>
+    >([]);
+
   useEffect(() => {
+    if (!open) {
+      return;
+    }
+
     const handleClickOutside = (
       event: MouseEvent
     ) => {
@@ -40,7 +51,7 @@ export default function DropdownMenu({
           event.target as Node
         )
       ) {
-        setIsOpen(false);
+        setOpen(false);
       }
     };
 
@@ -49,78 +60,165 @@ export default function DropdownMenu({
       handleClickOutside
     );
 
-    return () => {
+    return () =>
       document.removeEventListener(
         "mousedown",
         handleClickOutside
       );
-    };
-  }, []);
+  }, [open]);
 
-  const closeMenu = () =>
-    setIsOpen(false);
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    itemRefs.current[
+      focusedIndex
+    ]?.focus();
+  }, [open, focusedIndex]);
+
+  function handleMenuKeyDown(
+    e: React.KeyboardEvent
+  ) {
+    switch (e.key) {
+      case "Escape":
+        setOpen(false);
+        break;
+
+      case "ArrowDown":
+        e.preventDefault();
+
+        setFocusedIndex(
+          current =>
+            current ===
+              items.length - 1
+              ? 0
+              : current + 1
+        );
+
+        break;
+
+      case "ArrowUp":
+        e.preventDefault();
+
+        setFocusedIndex(
+          current =>
+            current === 0
+              ? items.length - 1
+              : current - 1
+        );
+
+        break;
+
+      case "Home":
+        e.preventDefault();
+
+        setFocusedIndex(0);
+
+        break;
+
+      case "End":
+        e.preventDefault();
+
+        setFocusedIndex(
+          items.length - 1
+        );
+
+        break;
+    }
+  }
 
   return (
     <div
       ref={containerRef}
-      className="relative inline-block"
+      className="relative"
     >
       <button
+        type="button"
         aria-haspopup="menu"
-        aria-expanded={isOpen}
-        onClick={() =>
-          setIsOpen((prev) => !prev)
-        }
-        className="
-          flex
-          items-center
-          justify-center
-          h-12
-          w-12
-          rounded-xl
-        "
+        aria-expanded={open}
+        onClick={(e) => {
+          e.stopPropagation();
+          setOpen(v => !v);
+        }}
       >
         {trigger}
       </button>
 
-      {isOpen && (
+      {open && (
         <div
           role="menu"
-          className={cn(
-            "absolute",
-            "top-full",
-            "mt-2",
-            "z-50",
-
-            "min-w-[260px]",
-
-            "overflow-hidden",
-
-            "rounded-3xl",
-
-            "border",
-            "border-slate-200",
-
-            "bg-[var(--bg)]",
-
-            "shadow-lg",
-
-            placement === "right"
-              ? "right-0"
-              : "left-0"
-          )}
+          onClick={(e) =>
+            e.stopPropagation()
+          }
+          onKeyDown={
+            handleMenuKeyDown
+          }
+          className="
+            absolute
+            right-0
+            z-50
+            mt-2
+            min-w-56
+            overflow-hidden
+            rounded-xl
+            border
+            border-(--border)
+            bg-(--surface)
+            shadow-lg
+          "
         >
-          {closeOnItemClick
-            ? (
-                <div
-                  onClick={closeMenu}
-                >
-                  {children}
-                </div>
-              )
-            : (
-                children
-              )}
+          {items.map(
+            (
+              item,
+              index
+            ) => (
+              <button
+                key={item.id}
+                ref={el => {
+                  itemRefs.current[
+                    index
+                  ] = el;
+                }}
+                role="menuitem"
+                type="button"
+                disabled={
+                  item.disabled
+                }
+                onClick={(e) => {
+                  e.stopPropagation();
+
+                  item.onClick();
+
+                  setOpen(false);
+                }}
+                className={`
+                  flex
+                  w-full
+                  items-center
+                  gap-3
+                  px-4
+                  py-3
+                  text-left
+                  hover:bg-(--background)
+
+                  ${item.danger
+                    ? "text-red-600"
+                    : ""
+                  }
+
+                  ${item.disabled
+                    ? "opacity-50"
+                    : ""
+                  }
+                `}
+              >
+                {item.icon}
+
+                {item.label}
+              </button>
+            )
+          )}
         </div>
       )}
     </div>

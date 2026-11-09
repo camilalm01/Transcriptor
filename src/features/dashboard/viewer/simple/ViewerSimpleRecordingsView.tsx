@@ -1,80 +1,92 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import MainLayout from "../../../../app/layouts/MainLayout";
-import Header from "../../../../shared/components/ui/navigation/Header";
 import SearchInput from "../../../../shared/components/ui/forms/SearchInput";
+import SpaceInfoCard from "../../../recordings/components/SpaceInfoCard";
+import RecordingCardSimple from "../../../recordings/components/RecordingCardSimple";
 
-import { useRecordings } from "../../../../features/recordings/hooks/useRecordings";
-import RecordingCard from "../../../../features/recordings/components/RecordingCard";
+import { useRecordings } from "../../../recordings/hooks/useRecordings";
+import { useSpace } from "../../../spaces/hooks/useSpace";
+
+import type {
+  Recording,
+} from "../../../recordings/types/recordings.types";
 
 export default function ViewerSimpleRecordingsView() {
-
   const navigate = useNavigate();
-
   const { spaceId } = useParams();
 
-  const [search, setSearch ] = useState("");
+  const [search, setSearch] =
+    useState("");
+
+  const { data: space } =
+    useSpace(spaceId);
 
   const {
     data: recordings = [],
     isLoading,
-    error,
   } = useRecordings({
     spaceId,
+    visibility: "PUBLISHED",
     q: search,
   });
 
+  console.log(recordings);
+
+  if (!spaceId) {
+    return null;
+  }
+
+  if (isLoading) {
+    return <div>Cargando...</div>;
+  }
+
   return (
-    <MainLayout>
+    <div className="space-y-6">
 
-      <div className="p-6 space-y-6">
+      <SpaceInfoCard
+        spaceCode={
+          space?.invite?.code ?? "----"
+        }
+      />
 
-        <Header
-          title="Grabaciones"
-          showBackButton
-        />
+      <SearchInput
+        value={search}
+        onChange={(e) =>
+          setSearch(
+            e.target.value
+          )
+        }
+        placeholder="Buscar grabaciones..."
+      />
 
-        <SearchInput
-          placeholder="Buscar grabación..."
-          value={search}
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
-        />
+      <h2
+        className="
+          text-2xl
+          font-bold
+        "
+      >
+        Sesiones
+      </h2>
 
-        {isLoading && (
-          <p>
-            Cargando...
-          </p>
-        )}
-
-        {error && (
-          <p className="text-red-500">
-            {error instanceof Error
-              ? error.message
-              : "Error cargando grabaciones"}
-          </p>
-        )}
-
+      <div className="space-y-3">
         {recordings.map(
-          (recording) => (
-            <RecordingCard
+          (
+            recording: Recording
+          ) => (
+            <RecordingCardSimple
               key={recording.id}
               recording={recording}
-              onClick={() =>
+              onOpen={() =>
                 navigate(
-                  `/recordings/${recording.id}`
+                  `/recordings/${recording.id}/details`
                 )
               }
             />
           )
         )}
-
       </div>
 
-    </MainLayout>
+    </div>
   );
 }

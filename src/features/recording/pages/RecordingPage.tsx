@@ -39,6 +39,14 @@ export default function RecordingPage() {
         });
     };
 
+    console.log("RecordingPage render");
+
+console.log({
+  recording,
+  paused,
+  elapsedSeconds,
+});
+
     return (
         <MainLayout>
             <Header

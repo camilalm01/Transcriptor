@@ -11,13 +11,22 @@ import ResetPasswordPage from "../../features/auth/pages/ResetPasswordPage";
 import ProtectedRoute from "./ProtectedRoute";
 
 import SpacePage from "../../features/spaces/pages/SpacesPage";
-import JoinSpacePage from "../../features/spaces/pages/JoinSpacePage";
+import JoinSpacePage from "../../features/spaces/pages/JoinPage";
 import AccessibilityPage from "../../features/accessibility/pages/AccessibilityPage";
 import AccessibilitySettingsPage from "../../features/accessibility/pages/AccessibilitySettingsPage";
-import RecordingsPage from "../../features/recordings/pages/RecordingsPage";
+
+import RecordingPage from "../../features/recording/pages/RecordingPage";
 import RecordingStartPage from "../../features/recording/pages/RecordingStartPage";
 import SessionSetupPage from "../../features/recording/pages/SessionSetupPage";
 import SessionSavedPage from "../../features/recording/pages/SessionSavedPage";
+
+import RecordingsPage from "../../features/recordings/pages/RecordingsPage";
+import MembersPage from "../../features/spaces/pages/MembersPage";
+import JoinPage from "../../features/spaces/pages/JoinPage";
+import LiveRecordingPage from "../../features/live/pages/LiveRecordingPage";
+import RecordingDetailsPage from "../../features/recordings/pages/RecordingDetailsPage";
+import TranscriptPage from "../../features/recordings/pages/TranscriptPage";
+import SummaryPage from "../../features/recordings/pages/SummaryPage";
 
 // Main
 //import ProfilePage from "../../features/profile/pages/ProfilePage";
@@ -45,13 +54,20 @@ export default function AppRoutes() {
 
             <Route path="/accessibility/settings" element={<ProtectedRoute> <AccessibilitySettingsPage /> </ProtectedRoute>}/>
             
-            <Route path="/spaces/:spaceId/recordings" element={<ProtectedRoute><RecordingsPage /></ProtectedRoute>} />            
             <Route path="/recording/start" element={<ProtectedRoute><RecordingStartPage /> </ProtectedRoute>}/>
             <Route path="/recording/setup" element={<ProtectedRoute><SessionSetupPage /></ProtectedRoute>}/>
-            
-            <Route path="/recording/live" element={<ProtectedRoute> <RecordingsPage /></ProtectedRoute>}/>
-
+            <Route path="/recording/live" element={<ProtectedRoute> <RecordingPage /></ProtectedRoute>}/>
             <Route path="/recording/saved" element={<ProtectedRoute><SessionSavedPage /></ProtectedRoute>}/>
+
+            <Route path="/spaces/:spaceId/members" element={<ProtectedRoute><MembersPage /></ProtectedRoute>} />
+            <Route path="/spaces/:spaceId/live/:recordingId" element={<ProtectedRoute><LiveRecordingPage /></ProtectedRoute>} />
+            <Route path="/join/:code" element={<ProtectedRoute><JoinPage /></ProtectedRoute>} />
+
+            <Route path="/spaces/:spaceId/recordings" element={<ProtectedRoute><RecordingsPage /></ProtectedRoute>} />
+            <Route path="/recordings/:recordingId" element={<ProtectedRoute><RecordingPage /></ProtectedRoute>} />
+            <Route path="/recordings/:recordingId/details" element={<ProtectedRoute><RecordingDetailsPage /></ProtectedRoute>} />
+            <Route path="/recordings/:recordingId/transcript" element={<ProtectedRoute><TranscriptPage /></ProtectedRoute>} />
+            <Route path="/recordings/:recordingId/summary" element={<ProtectedRoute><SummaryPage /></ProtectedRoute>} />
 
         </Routes>
     );
